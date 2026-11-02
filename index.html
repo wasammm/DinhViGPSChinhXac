@@ -2,361 +2,240 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8">
-<!-- Thêm thẻ meta viewport quan trọng để hiển thị đúng tỷ lệ trên mobile -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Three Phase Professional Demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Định vị khách hàng</title>
 <style>
-/* CSS được nâng cấp cho Responsive & Giao diện hiện đại hơn */
-body {
-  margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #20242b;
-  color: #fff;
-  display: flex;
-  flex-direction: row;
-  height: 100vh;
-  overflow: hidden; /* Desktop không scroll body */
-}
-
-#ui {
-  width: 340px;
-  background: #2d333b;
-  padding: 20px;
-  box-sizing: border-box;
-  overflow-y: auto;
-  height: 100%;
-  box-shadow: 2px 0 10px rgba(0,0,0,0.5);
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-#ui h2 {
-  margin: 0 0 10px 0;
-  font-size: 1.4rem;
-  color: #61afef;
-  text-align: center;
-}
-
-#view {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-  box-sizing: border-box;
-  height: 100%;
-  overflow: hidden;
-}
-
-svg {
-  background: #fff;
-  border-radius: 12px;
-  max-width: 100%;
-  max-height: 100%;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-}
-
-label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-  accent-color: #61afef;
-}
-
-select {
-  width: 100%;
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #444;
-  background: #1e2227;
-  color: #fff;
-  font-size: 14px;
-  outline: none;
-}
-select:focus { border-color: #61afef; }
-
-hr {
-  border: none;
-  border-top: 1px solid #444;
-  margin: 10px 0;
-  width: 100%;
-}
-
-#calc {
-  background: #20242b;
-  border-radius: 8px;
-  padding: 10px;
-  border: 1px solid #444;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
-}
-
-th, td {
-  padding: 6px 2px;
-  text-align: center;
-}
-
-th {
-  color: #abb2bf;
-  font-weight: 600;
-  border-bottom: 1px solid #444;
-  padding-bottom: 8px;
-}
-
-td input[type="text"], td input[type="number"] {
-  width: 90%;
-  text-align: center;
-  padding: 6px 2px;
-  font-size: 13px;
-  border-radius: 4px;
-  border: 1px solid #555;
-  background: #1e2227;
-  color: #fff;
-  box-sizing: border-box;
-}
-td input:focus { border-color: #61afef; outline: none; }
-
-.total-row {
-  font-weight: bold;
-  background: #28a745;
-  color: #fff;
-}
-.total-row td {
-  padding: 8px;
-}
-.total-row td:first-child {
-  border-radius: 0 0 0 8px;
-}
-.total-row td:last-child {
-  border-radius: 0 0 8px 0;
-}
-
-@media (max-width: 768px) {
-  body {
-    flex-direction: column;
-    height: auto;
-    min-height: 100vh;
-    overflow-y: auto;
-  }
-  #ui {
-    width: 100%;
-    height: auto;
-    order: 2;
-    box-shadow: none;
-    border-top: 2px solid #444;
-    padding: 16px 12px;
-  }
-  #view {
-    width: 100%;
-    height: 50vh;
-    order: 1;
-    padding: 12px;
-  }
-  h2 { font-size: 1.2rem; }
-  label { font-size: 16px; padding: 4px 0; }
-  input[type="checkbox"] { width: 22px; height: 22px; }
-  select, td input[type="text"], td input[type="number"] { font-size: 15px; padding: 8px 2px; }
-  table { font-size: 14px; }
-}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f4f6f8;--card:#fff;--tx:#1b2430;--mu:#66727f;--bd:#d9e0e7;--pri:#0b6bcb;--prt:#fff;--ok:#1a7f4b;--wa:#b26a00;--er:#c0392b}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121820;--card:#1b2430;--tx:#e8edf2;--mu:#98a4b1;--bd:#2c3846;--pri:#4a9df0;--prt:#0a1220;--ok:#4cc38a;--wa:#f0b04a;--er:#ff7b6b}}
+:root[data-theme="dark"]{--bg:#121820;--card:#1b2430;--tx:#e8edf2;--mu:#98a4b1;--bd:#2c3846;--pri:#4a9df0;--prt:#0a1220;--ok:#4cc38a;--wa:#f0b04a;--er:#ff7b6b}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:640px;margin:0 auto;padding:12px}
+h1{font-size:18px;margin:4px 0 10px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px;margin-bottom:12px}
+label{display:block;font-size:12px;color:var(--mu);margin:8px 0 2px}
+input{width:100%;padding:11px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit}
+button{padding:11px 14px;border:1px solid var(--bd);border-radius:8px;background:var(--card);color:var(--tx);font:inherit;cursor:pointer}
+button.p{background:var(--pri);color:var(--prt);border-color:var(--pri);font-weight:600}
+button.big{width:100%;margin-top:12px;padding:14px;font-size:17px}
+button.s{padding:5px 9px;font-size:13px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.msg{font-size:13px;color:var(--mu);margin-top:6px;min-height:18px}
+.msg.ok{color:var(--ok)}.msg.er{color:var(--er)}
+.gps{border:1px solid var(--bd);border-radius:8px;padding:9px;font-size:14px;background:var(--bg)}
+.gps.ok{border-color:var(--ok);color:var(--ok)}.gps.wa{border-color:var(--wa);color:var(--wa)}.gps.er{border-color:var(--er);color:var(--er)}
+.item{border-top:1px solid var(--bd);padding:9px 0}.item:first-child{border-top:0}
+.mu{color:var(--mu);font-size:13px}
+a{color:var(--pri)}
+summary{cursor:pointer;font-weight:600}
+.cnt{font-weight:600}
 </style>
-<link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#20242b">
-<link rel="apple-touch-icon" href="icon-192.png">
-<script>
-if('serviceWorker' in navigator){
-window.addEventListener('load',()=>navigator.serviceWorker.register('service-worker.js'));
-}
-</script>
 </head>
 <body>
-<div id="ui">
-<h2>Mô phỏng 3 Pha</h2>
-<label>Chọn nhanh loại tải</label>
-<select id="load">
-  <option value="0">Thuần trở (0°)</option>
-  <option value="30" selected>Tải Cảm (30°)</option>
-  <option value="-30">Tải Dung (-30°)</option>
-</select>
-<label><input id="anim" type="checkbox" checked> Quay véc-tơ tự động</label>
-<label><input id="fixA" type="checkbox"> Cố định pha A tại 0° (12h)</label>
+<main>
+<h1>Định vị khách hàng</h1>
 
-<div id='calc'>
-<table>
-<tr><th>Pha</th><th>U(V)</th><th>I(A)</th><th>φ(°)</th><th>Ngược</th><th>P(kW)</th></tr>
-<tr>
-  <td>A</td>
-  <td><input type="number" id='U0' value='220'></td>
-  <td><input type="number" id='I0' value='10'></td>
-  <td><input type="number" id='C0' value='30'></td>
-  <td><input type='checkbox' id='N0'></td>
-  <td><span id='P0'></span></td>
-</tr>
-<tr>
-  <td>B</td>
-  <td><input type="number" id='U1' value='220'></td>
-  <td><input type="number" id='I1' value='10'></td>
-  <td><input type="number" id='C1' value='30'></td>
-  <td><input type='checkbox' id='N1'></td>
-  <td><span id='P1'></span></td>
-</tr>
-<tr>
-  <td>C</td>
-  <td><input type="number" id='U2' value='220'></td>
-  <td><input type="number" id='I2' value='10'></td>
-  <td><input type="number" id='C2' value='30'></td>
-  <td><input type='checkbox' id='N2'></td>
-  <td><span id='P2'></span></td>
-</tr>
-<tr class="total-row">
-  <td colspan='5' align='right' style="padding-right: 10px;">TỔNG CÔNG SUẤT:</td>
-  <td><span id='PTotal'>0.000</span></td>
-</tr>
-</table>
+<div class="card">
+  <details id="cfg">
+    <summary id="cfgS">Thiết lập (nhập 1 lần)</summary>
+    <label>Người ghi nhận</label><input id="nv" placeholder="Họ tên">
+    <label>Khu vực / Điện lực quản lý</label><input id="kv" placeholder="VD: Điện lực Rạch Giá">
+    <div class="msg">Thiết lập được nhớ trên thiết bị này, lần sau không phải nhập lại.</div>
+  </details>
 </div>
+
+<div class="card">
+  <div id="gps" class="gps">Đang bật GPS…</div>
+  <label>Mã khách hàng</label>
+  <input id="ma" autocapitalize="characters" autocomplete="off">
+  <label>Số điện thoại</label>
+  <input id="sdt" inputmode="tel" autocomplete="off">
+  <div id="editBox" style="display:none"><label style="display:flex;gap:8px;align-items:center;font-size:14px;color:var(--tx)"><input type="checkbox" id="relo" style="width:auto"> Định vị lại theo vị trí hiện tại của tôi</label><button class="s" id="bCancel" style="margin-top:8px">Hủy sửa</button></div>
+  <button class="p big" id="bSave">📍 Lưu vị trí khách hàng</button>
+  <div class="msg" id="gm"></div>
+  <details style="margin-top:6px">
+    <summary class="mu">Nhập tọa độ tay (khi không có GPS)</summary>
+    <label>Dán “vĩ độ, kinh độ” copy từ Google Maps</label>
+    <input id="man" placeholder="10.012345, 105.085678">
+  </details>
 </div>
-<div id="view">
-<svg id="svg" viewBox="0 0 800 800" preserveAspectRatio="xMidYMid meet">
-<defs>
-<marker id="r" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 8,4 0,8Z" fill="red"/></marker>
-<marker id="b" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 8,4 0,8Z" fill="blue"/></marker>
-</defs>
-<g id="g"></g><g id="v"></g>
-</svg>
+
+<div class="card">
+  <div class="row">
+    <input id="q" placeholder="Tìm theo mã, SĐT…" style="flex:1;min-width:140px">
+    <input id="day" type="date" style="width:auto">
+  </div>
+  <div class="mu" style="margin-top:6px">Ngày chọn: <span class="cnt" id="nDay">0</span> · Tổng đã lưu: <span class="cnt" id="nAll">0</span></div>
+  <div class="row" style="margin-top:8px">
+    <button class="p" id="bXls">⬇ Xuất Excel (ngày chọn)</button>
+    <button id="bAll">Xuất toàn bộ</button>
+    <button id="bDel">Xóa dòng đã xuất</button>
+  </div>
+  <div class="msg" id="xm"></div>
 </div>
+
+<div class="card" id="list"></div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
-const g=document.getElementById('g'),v=document.getElementById('v'),cx=400,cy=400,R=300;
+(function(){
+var KEY='dvkh_v1',CFG='dvkh_cfg_v1';
+var recs=[],buf=[],wid=null;
+var $=function(i){return document.getElementById(i)};
+function ld(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
+function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function pad(n){return String(n).length<2?'0'+n:''+n}
+function ymd(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function say(id,t,c){var e=$(id);e.textContent=t;e.className='msg'+(c?' '+c:'')}
 
-for(let a=0;a<360;a++){
-  let t=a*Math.PI/180,r=(a%30?R-6:R-16);
-  g.innerHTML+=`<line x1="${cx+r*Math.cos(t)}" y1="${cy-r*Math.sin(t)}" x2="${cx+R*Math.cos(t)}" y2="${cy-R*Math.sin(t)}" stroke="#bbb"/>`;
-  if(a%30==0) {
-    g.innerHTML+=`<text x="${cx+(R+24)*Math.cos(t)}" y="${cy-(R+24)*Math.sin(t)}" font-size="14" font-weight="bold" fill="#333" text-anchor="middle" dominant-baseline="middle">${a}</text>`;
+recs=ld(KEY,[]);
+var cfg=ld(CFG,{});
+$('nv').value=cfg.nv||'';$('kv').value=cfg.kv||'';
+$('day').value=ymd(new Date());
+var editMa=null;
+function cfgUi(){
+  var ok=$('nv').value.trim()&&$('kv').value.trim();
+  $('cfgS').textContent=ok?('Đang ghi nhận: '+$('nv').value.trim()+' · '+$('kv').value.trim()):'Thiết lập (nhập 1 lần)';
+  $('cfg').open=!ok;
+}
+['nv','kv'].forEach(function(i){$(i).addEventListener('change',function(){
+  sv(CFG,{nv:$('nv').value.trim(),kv:$('kv').value.trim()});cfgUi();
+})});
+cfgUi();
+function resetForm(){$('ma').value='';$('sdt').value='';$('man').value='';editMa=null;$('relo').checked=false;$('editBox').style.display='none';$('bSave').textContent='📍 Lưu vị trí khách hàng'}
+resetForm();
+
+// ---- GPS: theo dõi liên tục, giữ lần đo có sai số nhỏ nhất trong 25 giây gần nhất
+function best(){
+  var now=Date.now();buf=buf.filter(function(f){return now-f.t<25000});
+  var b=null;buf.forEach(function(f){if(!b||f.acc<b.acc)b=f});return b;
+}
+function showGps(){
+  var g=$('gps'),b=best();
+  if(!b){return}
+  var a=Math.round(b.acc);
+  g.className='gps '+(a<=10?'ok':a<=25?'wa':'er');
+  g.textContent='GPS: sai số ±'+a+' m'+(a<=10?' — rất tốt, có thể lưu':a<=25?' — tạm được, nên đợi thêm vài giây':' — còn kém, hãy ra nơi thoáng hoặc đợi thêm');
+}
+function onPos(p){
+  buf.push({lat:p.coords.latitude,lng:p.coords.longitude,acc:p.coords.accuracy,t:Date.now()});showGps();
+}
+function onErr(e){
+  var g=$('gps');g.className='gps er';
+  g.textContent=e.code===1?'GPS bị chặn: hãy cấp quyền vị trí cho trình duyệt (hoặc dùng mục nhập tọa độ tay).':'Chưa bắt được tín hiệu GPS, đang thử lại…';
+}
+function start(){
+  if(wid!==null)return;
+  if(!navigator.geolocation){onErr({code:1});return}
+  wid=navigator.geolocation.watchPosition(onPos,onErr,{enableHighAccuracy:true,maximumAge:0,timeout:30000});
+}
+function stop(){if(wid!==null&&navigator.geolocation){navigator.geolocation.clearWatch(wid);wid=null}}
+document.addEventListener('visibilitychange',function(){document.hidden?stop():start()});
+setInterval(showGps,3000);
+start();
+
+// ---- Lưu
+$('bSave').onclick=function(){
+  var ma=$('ma').value.trim().toUpperCase().replace(/\s+/g,'');
+  if(!ma){say('gm','Hãy nhập mã khách hàng.','er');return}
+  var sdt=$('sdt').value.replace(/[\s.\-]/g,'');
+  if(sdt&&!/^\+?\d{9,11}$/.test(sdt)){say('gm','Số điện thoại chưa hợp lệ.','er');return}
+  var lat,lng,acc='',keep=null,man=$('man').value.trim();
+  if(editMa&&!$('relo').checked&&!man){for(var j=0;j<recs.length;j++)if(recs[j].ma===editMa)keep=recs[j]}
+  if(keep){lat=keep.lat;lng=keep.lng;acc=keep.acc}
+  else if(man){
+    var m=man.split(/[,;\s]+/);lat=parseFloat(m[0]);lng=parseFloat(m[1]);
+    if(isNaN(lat)||isNaN(lng)||Math.abs(lat)>90||Math.abs(lng)>180){say('gm','Tọa độ nhập tay chưa hợp lệ.','er');return}
+  }else{
+    var b=best();
+    if(!b){say('gm','Chưa có vị trí GPS. Hãy đợi tín hiệu hoặc cấp quyền vị trí.','er');return}
+    if(b.acc>30&&!confirm('Sai số GPS đang ±'+Math.round(b.acc)+' m. Vẫn lưu vị trí này?'))return;
+    lat=b.lat;lng=b.lng;acc=Math.round(b.acc);
   }
-}
-g.innerHTML+=`<circle cx=${cx} cy=${cy} r=${R} fill=none stroke=#666 stroke-width=2/>`;
-
-let rot=0;
-function arrow(a,l,c,m,n){
-  let ang=90-a; 
-  let t=ang*Math.PI/180,x=cx+l*Math.cos(t),y=cy-l*Math.sin(t);
-  let textAnchor = "start";
-  let dx = 6; let dy = 4;
-  if(x < cx) { textAnchor = "end"; dx = -6; }
-  v.innerHTML+=`<line x1=${cx} y1=${cy} x2=${x} y2=${y} stroke=${c} stroke-width=4 marker-end="url(#${m})"/>
-  <text x=${x+dx} y=${y+dy} fill=${c} font-size="18" font-weight="bold" text-anchor="${textAnchor}">${n}</text>`;
-}
-
-function draw(){
-  v.innerHTML="";
-  let base=(document.getElementById('fixA').checked?0:rot);
-  let U=[base,base+120,base-120],L=["Ua","Ub","Uc"],I=["Ia","Ib","Ic"];
-  
-  for(let i=0;i<3;i++){
-    let p=+document.getElementById("C"+i).value||0;
-    let isRev = document.getElementById("N"+i).checked;
-    
-    let ai=U[i]+p; 
-    if(isRev) ai+=180;
-    
-    arrow(U[i],240,"red","r",L[i]);
-    arrow(ai,180,"blue","b",I[i]);
-
-    // === VẼ GÓC GIỮA U VÀ I (Fix lỗi hiển thị góc nhỏ) ===
-    let start = 90 - U[i];
-    let end = 90 - ai;
-    let r_arc = 50 + i*30; 
-    
-    let t1 = start * Math.PI / 180;
-    let t2 = end * Math.PI / 180;
-    let x1 = cx + r_arc * Math.cos(t1);
-    let y1 = cy - r_arc * Math.sin(t1);
-    let x2 = cx + r_arc * Math.cos(t2);
-    let y2 = cy - r_arc * Math.sin(t2);
-    
-    // Tính tổng góc quay thực tế bao gồm cả phần +180 độ khi ngược pha
-    let delta = p + (isRev ? 180 : 0);
-    
-    // Chuẩn hóa giới hạn hiển thị (phòng trường hợp nhập góc > 360)
-    while(delta > 360) delta -= 360;
-    while(delta < -360) delta += 360;
-    
-    // Sử dụng Large Arc Flag (cờ vẽ cung lớn) nếu góc quay vượt quá 180 độ
-    let largeArcFlag = Math.abs(delta) > 180 ? 1 : 0;
-    
-    // Sweep Flag quyết định hướng vẽ (cùng chiều kim đồng hồ hay ngược lại)
-    let sweepFlag = delta > 0 ? 1 : 0;
-    if (Math.abs(delta) === 180) sweepFlag = 1;
-    
-    let arcColor = "#8e44ad"; 
-    let path = "";
-    
-    // Vẽ cung tròn
-    if (Math.abs(delta) > 0.1) {
-        path = `<path d="M ${x1} ${y1} A ${r_arc} ${r_arc} 0 ${largeArcFlag} ${sweepFlag} ${x2} ${y2}" fill="none" stroke="${arcColor}" stroke-dasharray="4" stroke-width="2"/>`;
-    }
-    
-    // Tính vị trí tâm cung tròn để đặt chữ
-    let mid = U[i] + delta / 2;
-    let t_mid = (90 - mid) * Math.PI / 180;
-    let tr = r_arc + 16;
-    let tx = cx + tr * Math.cos(t_mid);
-    let ty = cy - tr * Math.sin(t_mid);
-    
-    let labelText = isRev ? (p + "° (+180°)") : (p + "°");
-    
-    path += `<text x="${tx}" y="${ty}" fill="${arcColor}" font-size="15" font-weight="bold" text-anchor="middle" dominant-baseline="middle">${labelText}</text>`;
-    
-    v.innerHTML += path;
-  }
-}
-
-document.getElementById('load').onchange=()=>{
-  let loadSelect = document.getElementById('load');
-  for(let i=0;i<3;i++) {
-    document.getElementById("C"+i).value = loadSelect.value;
-  }
-  calc();
-  draw();
-}
-
-function loop(){
-  if(document.getElementById('anim').checked && !document.getElementById('fixA').checked) rot=(rot-1+360)%360;
-  draw();
-  requestAnimationFrame(loop)
+  lat=Math.round(lat*1e7)/1e7;lng=Math.round(lng*1e7)/1e7;
+  var now=new Date();
+  var r={ma:ma,sdt:sdt,lat:lat,lng:lng,acc:acc,d:ymd(now),h:pad(now.getHours())+':'+pad(now.getMinutes()),ts:now.toISOString(),xp:false};
+  if(keep){r.d=keep.d;r.h=keep.h;r.ts=keep.ts}
+  var i=-1,c=-1;for(var k=0;k<recs.length;k++){if(recs[k].ma===(editMa||ma))i=k;if(recs[k].ma===ma&&ma!==editMa)c=k}
+  if(editMa&&c>-1){say('gm','Mã '+ma+' đã có trong danh sách.','er');return}
+  if(i>-1){recs[i]=r;say('gm','Đã cập nhật '+ma+(keep?'.':' với tọa độ mới'+(acc!==''?' (±'+acc+' m).':'.')),'ok')}
+  else{recs.unshift(r);say('gm','Đã lưu '+ma+(acc!==''?' (±'+acc+' m).':'.'),'ok')}
+  sv(KEY,recs);resetForm();render();
 };
-loop();
 
-function calc(){
-  let pTotal=0;
-  for(let i=0;i<3;i++){
-    let U=+document.getElementById('U'+i).value||0;
-    let I=+document.getElementById('I'+i).value||0;
-    if(document.getElementById('N'+i).checked) I=-I;
-    let pf=Math.cos((+document.getElementById("C"+i).value||0)*Math.PI/180);
-    let P=((U*I*pf)/1000);
-    document.getElementById('P'+i).textContent=P.toFixed(3);
-    pTotal+=P;
-  }
-  document.getElementById('PTotal').textContent=pTotal.toFixed(3)+' kW';
+function render(){
+  var q=$('q').value.trim().toLowerCase(),d=$('day').value;
+  var vis=recs.filter(function(r){return !q||(r.ma+' '+r.sdt).toLowerCase().indexOf(q)>-1});
+  $('nAll').textContent=recs.length;
+  $('nDay').textContent=recs.filter(function(r){return r.d===d}).length;
+  var h='';
+  vis.slice(0,200).forEach(function(r){
+    var link='https://www.google.com/maps?q='+r.lat+','+r.lng;
+    h+='<div class="item"><b>'+esc(r.ma)+(r.xp?' <span class="mu">(đã xuất)</span>':'')+'</b>'
+     +'<div class="mu">'+esc(r.sdt||'Chưa có SĐT')+' · '+r.d+' '+r.h+'</div>'
+     +'<div class="mu">'+r.lat+', '+r.lng+(r.acc!==''?' (±'+r.acc+' m)':'')+'</div>'
+     +'<div class="row" style="margin-top:5px"><a href="'+link+'" target="_blank" rel="noopener">Mở Google Maps</a>'
+     +'<button class="s" data-e="'+esc(r.ma)+'">Sửa</button><button class="s" data-x="'+esc(r.ma)+'">Xóa</button></div></div>';
+  });
+  if(!h)h='<div class="mu">Chưa có khách hàng nào.</div>';
+  if(vis.length>200)h+='<div class="mu">Hiển thị 200/'+vis.length+' dòng đầu, hãy tìm kiếm để thu hẹp.</div>';
+  $('list').innerHTML=h;
 }
+$('list').addEventListener('click',function(ev){
+  var t=ev.target,e=t.getAttribute('data-e'),x=t.getAttribute('data-x');
+  var f=function(m){for(var k=0;k<recs.length;k++)if(recs[k].ma===m)return k;return -1};
+  if(e){var r=recs[f(e)];$('ma').value=r.ma;$('sdt').value=r.sdt||'';$('man').value='';editMa=r.ma;$('relo').checked=false;$('editBox').style.display='block';$('bSave').textContent='💾 Cập nhật khách hàng';window.scrollTo(0,0);say('gm','Đang sửa '+r.ma+'. Tích “Định vị lại” nếu muốn lấy tọa độ tại vị trí bạn đang đứng.')}
+  if(x&&confirm('Xóa '+x+'?')){recs.splice(f(x),1);sv(KEY,recs);render()}
+});
+$('q').addEventListener('input',render);
+$('bCancel').onclick=function(){resetForm();say('gm','')};
+$('day').addEventListener('change',render);
 
-document.querySelectorAll("input").forEach(e=>e.oninput=()=>{calc();draw();});
-document.querySelectorAll("input[type=checkbox]").forEach(e=>e.onchange=()=>{calc();draw();});
-calc();
+function rows(list){
+  var kv=$('kv').value.trim(),nv=$('nv').value.trim();
+  return list.map(function(r,i){return{
+    'STT':i+1,'Ngày':r.d,'Giờ':r.h,'Mã KH':r.ma,'Số điện thoại':r.sdt||'',
+    'Vĩ độ':r.lat,'Kinh độ':r.lng,'Sai số (m)':r.acc,
+    'Link Google Maps':'https://www.google.com/maps?q='+r.lat+','+r.lng,
+    'Người ghi nhận':nv,'Khu vực':kv}});
+}
+function save(name,data){
+  return (window.claude&&claude.use?claude.use('downloads'):Promise.resolve(null)).then(function(dl){
+    if(dl)return dl.save({filename:name,data:data});
+    var b=new Blob([data]),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();a.remove();
+    return{status:'saved'};
+  });
+}
+function exp(list,tag){
+  if(!list.length){say('xm','Không có dữ liệu để xuất.','er');return}
+  var kv=($('kv').value.trim()||'KhuVuc').replace(/[^\w\u00C0-\u1EF9]+/g,'_');
+  var nm='DinhViKH_'+kv+'_'+tag,data=rows(list),p;
+  if(window.XLSX){
+    var ws=XLSX.utils.json_to_sheet(data);
+    ws['!cols']=[5,11,7,18,14,12,12,10,38,18,22].map(function(w){return{wch:w}});
+    var wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'DinhViKH');
+    p=save(nm+'.xlsx',XLSX.write(wb,{type:'array',bookType:'xlsx'}));
+  }else{
+    var keys=Object.keys(data[0]);
+    var csv='\uFEFF'+keys.join(',')+'\n'+data.map(function(o){return keys.map(function(k){return '"'+String(o[k]==null?'':o[k]).replace(/"/g,'""')+'"'}).join(',')}).join('\n');
+    p=save(nm+'.csv',csv);say('xm','Không tải được thư viện Excel (cần mạng), xuất CSV thay thế.');
+  }
+  p.then(function(){list.forEach(function(r){r.xp=true});sv(KEY,recs);render();say('xm','Đã xuất '+list.length+' dòng.','ok')})
+   .catch(function(e){say('xm',(e&&e.code==='declined')?'Bạn đã hủy lưu file.':'Không xuất được file'+(e&&e.message?': '+e.message:'')+'.','er')});
+}
+$('bXls').onclick=function(){var d=$('day').value;exp(recs.filter(function(r){return r.d===d}).slice().reverse(),d)};
+$('bAll').onclick=function(){exp(recs.slice().reverse(),'TatCa_'+ymd(new Date()))};
+$('bDel').onclick=function(){
+  var n=recs.filter(function(r){return r.xp}).length;
+  if(!n){say('xm','Chưa có dòng nào đã xuất.');return}
+  if(confirm('Xóa '+n+' dòng đã xuất khỏi thiết bị này?')){recs=recs.filter(function(r){return !r.xp});sv(KEY,recs);render()}
+};
+render();
+})();
 </script>
 </body>
 </html>
