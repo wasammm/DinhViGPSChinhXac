@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Định vị khách hàng</title>
+<title>Phiếu thu thập thông tin khách hàng</title>
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
 --bg:#f4f6f8;--card:#fff;--tx:#1b2430;--mu:#66727f;--bd:#d9e0e7;--pri:#0b6bcb;--prt:#fff;--ok:#1a7f4b;--wa:#b26a00;--er:#c0392b}
@@ -19,23 +19,30 @@ label{display:block;font-size:12px;color:var(--mu);margin:8px 0 2px}
 input{width:100%;padding:11px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit}
 button{padding:11px 14px;border:1px solid var(--bd);border-radius:8px;background:var(--card);color:var(--tx);font:inherit;cursor:pointer}
 button.p{background:var(--pri);color:var(--prt);border-color:var(--pri);font-weight:600}
-button.big{width:100%;margin-top:12px;padding:14px;font-size:17px}
+button.big{width:100%;margin-top:10px;padding:14px;font-size:17px}
 button.s{padding:5px 9px;font-size:13px}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .msg{font-size:13px;color:var(--mu);margin-top:6px;min-height:18px}
 .msg.ok{color:var(--ok)}.msg.er{color:var(--er)}
 .gps{border:1px solid var(--bd);border-radius:8px;padding:9px;font-size:14px;background:var(--bg)}
 .gps.ok{border-color:var(--ok);color:var(--ok)}.gps.wa{border-color:var(--wa);color:var(--wa)}.gps.er{border-color:var(--er);color:var(--er)}
-.item{border-top:1px solid var(--bd);padding:9px 0}.item:first-child{border-top:0}
+.thumbs{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+.thumbs div{position:relative}
+.thumbs img{width:84px;height:84px;object-fit:cover;border-radius:8px;border:1px solid var(--bd);display:block}
+.thumbs button{position:absolute;top:-8px;right:-8px;padding:0 7px;border-radius:50%;line-height:22px}
+.item{border-top:1px solid var(--bd);padding:10px 0;display:flex;gap:10px}.item:first-child{border-top:0}
+.item img{width:64px;height:64px;object-fit:cover;border-radius:8px;flex:none}
+.item .no{width:64px;height:64px;border-radius:8px;background:var(--bg);flex:none;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--mu);text-align:center}
 .mu{color:var(--mu);font-size:13px}
 a{color:var(--pri)}
 summary{cursor:pointer;font-weight:600}
 .cnt{font-weight:600}
+#sheet{position:fixed;left:-10000px;top:0;width:794px;background:#fff;color:#000}
 </style>
 </head>
 <body>
 <main>
-<h1>Định vị khách hàng</h1>
+<h1>Phiếu thu thập thông tin khách hàng</h1>
 
 <div class="card">
   <details id="cfg">
@@ -52,8 +59,17 @@ summary{cursor:pointer;font-weight:600}
   <input id="ma" autocapitalize="characters" autocomplete="off">
   <label>Số điện thoại</label>
   <input id="sdt" inputmode="tel" autocomplete="off">
+  <label>Địa chỉ mới (chỉ nhập nếu có)</label>
+  <input id="dc" autocomplete="off">
+  <label>Ghi chú (nếu có)</label>
+  <input id="gc" autocomplete="off">
+  <label>Ảnh nhà (tối đa 3 ảnh)</label>
+  <button id="bPh" type="button">📷 Chụp / chọn ảnh</button>
+  <input id="fi" type="file" accept="image/*" multiple hidden>
+  <div class="thumbs" id="th"></div>
   <div id="editBox" style="display:none"><label style="display:flex;gap:8px;align-items:center;font-size:14px;color:var(--tx)"><input type="checkbox" id="relo" style="width:auto"> Định vị lại theo vị trí hiện tại của tôi</label><button class="s" id="bCancel" style="margin-top:8px">Hủy sửa</button></div>
-  <button class="p big" id="bSave">📍 Lưu vị trí khách hàng</button>
+  <button class="p big" id="bSave">💾 Lưu phiếu</button>
+  <button class="big" id="bSend">📤 Lưu & gửi PDF (Zalo, Messenger…)</button>
   <div class="msg" id="gm"></div>
   <details style="margin-top:6px">
     <summary class="mu">Nhập tọa độ tay (khi không có GPS)</summary>
@@ -69,172 +85,270 @@ summary{cursor:pointer;font-weight:600}
   </div>
   <div class="mu" style="margin-top:6px">Ngày chọn: <span class="cnt" id="nDay">0</span> · Tổng đã lưu: <span class="cnt" id="nAll">0</span></div>
   <div class="row" style="margin-top:8px">
-    <button class="p" id="bXls">⬇ Xuất Excel (ngày chọn)</button>
+    <button class="p" id="bXls">⬇ Xuất Excel cuối ngày</button>
     <button id="bAll">Xuất toàn bộ</button>
     <button id="bDel">Xóa dòng đã xuất</button>
   </div>
   <div class="msg" id="xm"></div>
+  <button class="p" id="bShare" style="display:none">📤 Bấm để gửi PDF</button>
 </div>
 
 <div class="card" id="list"></div>
 </main>
+<div id="sheet"></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
 <script>
-(function(){
-var KEY='dvkh_v1',CFG='dvkh_cfg_v1';
-var recs=[],buf=[],wid=null;
-var $=function(i){return document.getElementById(i)};
-function ld(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
-function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
-function pad(n){return String(n).length<2?'0'+n:''+n}
-function ymd(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
-function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
-function say(id,t,c){var e=$(id);e.textContent=t;e.className='msg'+(c?' '+c:'')}
+(()=>{
+const CFG='dvkh_cfg_v1',OLD='dvkh_v1',DEF='PB13010',$=i=>document.getElementById(i);
+let recs=[],buf=[],wid=null,editMa=null,ph=[],pend=null;
+const ld=(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}};
+const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const pad=n=>String(n).padStart(2,'0'),ymd=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const say=(id,t,c)=>{const e=$(id);e.textContent=t;e.className='msg'+(c?' '+c:'')};
+const mapLink=r=>'https://www.google.com/maps?q='+r.lat+','+r.lng;
 
-recs=ld(KEY,[]);
-var cfg=ld(CFG,{});
+// ---- Lưu trữ: IndexedDB (chứa được ảnh), mỗi phiếu một bản ghi
+let dbp=null;
+const db=()=>dbp||(dbp=new Promise((ok,ko)=>{const q=indexedDB.open('dvkh2',1);q.onupgradeneeded=()=>q.result.createObjectStore('recs',{keyPath:'ma'});q.onsuccess=()=>ok(q.result);q.onerror=()=>ko(q.error)}));
+const tx=(m,f)=>db().then(d=>new Promise((ok,ko)=>{const t=d.transaction('recs',m),r=f(t.objectStore('recs'));t.oncomplete=()=>ok(r&&r.result);t.onerror=()=>ko(t.error)}));
+const dbAll=()=>tx('readonly',s=>s.getAll()),dbPut=r=>tx('readwrite',s=>s.put(r)),dbDel=m=>tx('readwrite',s=>s.delete(m));
+const warn=()=>say('gm','Không lưu được vào bộ nhớ trình duyệt (chế độ riêng tư?). Hãy xuất Excel sớm.','er');
+
+// ---- Thiết lập
+const cfg=ld(CFG,{});
 $('nv').value=cfg.nv||'';$('kv').value=cfg.kv||'';
 $('day').value=ymd(new Date());
-var editMa=null;
 function cfgUi(){
-  var ok=$('nv').value.trim()&&$('kv').value.trim();
+  const ok=$('nv').value.trim()&&$('kv').value.trim();
   $('cfgS').textContent=ok?('Đang ghi nhận: '+$('nv').value.trim()+' · '+$('kv').value.trim()):'Thiết lập (nhập 1 lần)';
   $('cfg').open=!ok;
 }
-['nv','kv'].forEach(function(i){$(i).addEventListener('change',function(){
-  sv(CFG,{nv:$('nv').value.trim(),kv:$('kv').value.trim()});cfgUi();
-})});
+['nv','kv'].forEach(i=>$(i).addEventListener('change',()=>{sv(CFG,{nv:$('nv').value.trim(),kv:$('kv').value.trim()});cfgUi()}));
 cfgUi();
-function resetForm(){$('ma').value='';$('sdt').value='';$('man').value='';editMa=null;$('relo').checked=false;$('editBox').style.display='none';$('bSave').textContent='📍 Lưu vị trí khách hàng'}
-resetForm();
 
-// ---- GPS: theo dõi liên tục, giữ lần đo có sai số nhỏ nhất trong 25 giây gần nhất
-function best(){
-  var now=Date.now();buf=buf.filter(function(f){return now-f.t<25000});
-  var b=null;buf.forEach(function(f){if(!b||f.acc<b.acc)b=f});return b;
+// ---- Ảnh
+const shrink=(src,max,q)=>new Promise((ok,ko)=>{
+  const i=new Image();
+  i.onload=()=>{const k=Math.min(1,max/Math.max(i.width,i.height)),c=document.createElement('canvas');
+    c.width=Math.round(i.width*k);c.height=Math.round(i.height*k);c.getContext('2d').drawImage(i,0,0,c.width,c.height);
+    if(src.indexOf('blob:')===0)URL.revokeObjectURL(src);ok(c.toDataURL('image/jpeg',q))};
+  i.onerror=ko;i.src=src;
+});
+function thumbs(){
+  $('th').innerHTML=ph.map((p,i)=>'<div><img src="'+p+'" alt="Ảnh '+(i+1)+'"><button type="button" data-r="'+i+'">×</button></div>').join('');
+  $('bPh').textContent=ph.length?'📷 Thêm ảnh ('+ph.length+'/3)':'📷 Chụp / chọn ảnh';
 }
+$('bPh').onclick=()=>{if(ph.length>=3){say('gm','Tối đa 3 ảnh mỗi phiếu.','er');return}$('fi').click()};
+$('fi').onchange=async e=>{
+  const fs=Array.from(e.target.files).slice(0,3-ph.length);
+  for(const f of fs){try{ph.push(await shrink(URL.createObjectURL(f),1000,.7))}catch(x){say('gm','Không đọc được một ảnh.','er')}}
+  e.target.value='';thumbs();
+};
+$('th').onclick=e=>{const r=e.target.getAttribute('data-r');if(r!==null){ph.splice(+r,1);thumbs()}};
+
+// ---- GPS: theo dõi liên tục, giữ lần đo sai số nhỏ nhất trong 25 giây gần nhất
+function best(){const n=Date.now();buf=buf.filter(f=>n-f.t<25000);let b=null;buf.forEach(f=>{if(!b||f.acc<b.acc)b=f});return b}
 function showGps(){
-  var g=$('gps'),b=best();
-  if(!b){return}
-  var a=Math.round(b.acc);
+  const b=best();if(!b)return;const a=Math.round(b.acc),g=$('gps');
   g.className='gps '+(a<=10?'ok':a<=25?'wa':'er');
   g.textContent='GPS: sai số ±'+a+' m'+(a<=10?' — rất tốt, có thể lưu':a<=25?' — tạm được, nên đợi thêm vài giây':' — còn kém, hãy ra nơi thoáng hoặc đợi thêm');
 }
-function onPos(p){
-  buf.push({lat:p.coords.latitude,lng:p.coords.longitude,acc:p.coords.accuracy,t:Date.now()});showGps();
-}
-function onErr(e){
-  var g=$('gps');g.className='gps er';
-  g.textContent=e.code===1?'GPS bị chặn: hãy cấp quyền vị trí cho trình duyệt (hoặc dùng mục nhập tọa độ tay).':'Chưa bắt được tín hiệu GPS, đang thử lại…';
-}
-function start(){
-  if(wid!==null)return;
-  if(!navigator.geolocation){onErr({code:1});return}
-  wid=navigator.geolocation.watchPosition(onPos,onErr,{enableHighAccuracy:true,maximumAge:0,timeout:30000});
-}
+const onPos=p=>{buf.push({lat:p.coords.latitude,lng:p.coords.longitude,acc:p.coords.accuracy,t:Date.now()});showGps()};
+const onErr=e=>{const g=$('gps');g.className='gps er';g.textContent=e.code===1?'GPS bị chặn: hãy cấp quyền vị trí cho trình duyệt (hoặc dùng mục nhập tọa độ tay).':'Chưa bắt được tín hiệu GPS, đang thử lại…'};
+function start(){if(wid!==null)return;if(!navigator.geolocation){onErr({code:1});return}wid=navigator.geolocation.watchPosition(onPos,onErr,{enableHighAccuracy:true,maximumAge:0,timeout:30000})}
 function stop(){if(wid!==null&&navigator.geolocation){navigator.geolocation.clearWatch(wid);wid=null}}
-document.addEventListener('visibilitychange',function(){document.hidden?stop():start()});
-setInterval(showGps,3000);
-start();
+document.addEventListener('visibilitychange',()=>document.hidden?stop():start());
+setInterval(showGps,3000);start();
 
-// ---- Lưu
-$('bSave').onclick=function(){
-  var ma=$('ma').value.trim().toUpperCase().replace(/\s+/g,'');
-  if(!ma){say('gm','Hãy nhập mã khách hàng.','er');return}
-  var sdt=$('sdt').value.replace(/[\s.\-]/g,'');
-  if(sdt&&!/^\+?\d{9,11}$/.test(sdt)){say('gm','Số điện thoại chưa hợp lệ.','er');return}
-  var lat,lng,acc='',keep=null,man=$('man').value.trim();
-  if(editMa&&!$('relo').checked&&!man){for(var j=0;j<recs.length;j++)if(recs[j].ma===editMa)keep=recs[j]}
+// ---- Form
+function resetForm(){
+  $('ma').value=DEF;['sdt','dc','gc','man'].forEach(i=>$(i).value='');ph=[];thumbs();
+  editMa=null;$('relo').checked=false;$('editBox').style.display='none';$('bSave').textContent='💾 Lưu phiếu';
+}
+resetForm();
+$('ma').addEventListener('focus',function(){const t=this;setTimeout(()=>t.setSelectionRange(t.value.length,t.value.length),0)});
+$('bCancel').onclick=()=>{resetForm();say('gm','')};
+
+function build(){
+  const ma=$('ma').value.trim().toUpperCase().replace(/\s+/g,'');
+  if(!ma||ma===DEF){say('gm','Hãy nhập tiếp phần số sau '+DEF+' của mã khách hàng.','er');return null}
+  const sdt=$('sdt').value.replace(/[\s.\-]/g,'');
+  if(sdt&&!/^\+?\d{9,11}$/.test(sdt)){say('gm','Số điện thoại chưa hợp lệ.','er');return null}
+  if(editMa&&ma!==editMa&&recs.some(x=>x.ma===ma)){say('gm','Mã '+ma+' đã có trong danh sách.','er');return null}
+  if(!editMa&&recs.some(x=>x.ma===ma)&&!confirm('Mã '+ma+' đã có phiếu. Ghi đè bằng phiếu mới?'))return null;
+  let lat,lng,acc='',keep=null;const man=$('man').value.trim();
+  if(editMa&&!$('relo').checked&&!man)keep=recs.find(x=>x.ma===editMa)||null;
   if(keep){lat=keep.lat;lng=keep.lng;acc=keep.acc}
   else if(man){
-    var m=man.split(/[,;\s]+/);lat=parseFloat(m[0]);lng=parseFloat(m[1]);
-    if(isNaN(lat)||isNaN(lng)||Math.abs(lat)>90||Math.abs(lng)>180){say('gm','Tọa độ nhập tay chưa hợp lệ.','er');return}
+    const m=man.split(/[,;\s]+/);lat=parseFloat(m[0]);lng=parseFloat(m[1]);
+    if(isNaN(lat)||isNaN(lng)||Math.abs(lat)>90||Math.abs(lng)>180){say('gm','Tọa độ nhập tay chưa hợp lệ.','er');return null}
   }else{
-    var b=best();
-    if(!b){say('gm','Chưa có vị trí GPS. Hãy đợi tín hiệu hoặc cấp quyền vị trí.','er');return}
-    if(b.acc>30&&!confirm('Sai số GPS đang ±'+Math.round(b.acc)+' m. Vẫn lưu vị trí này?'))return;
+    const b=best();
+    if(!b){say('gm','Chưa có vị trí GPS. Hãy đợi tín hiệu hoặc cấp quyền vị trí.','er');return null}
+    if(b.acc>30&&!confirm('Sai số GPS đang ±'+Math.round(b.acc)+' m. Vẫn lưu vị trí này?'))return null;
     lat=b.lat;lng=b.lng;acc=Math.round(b.acc);
   }
-  lat=Math.round(lat*1e7)/1e7;lng=Math.round(lng*1e7)/1e7;
-  var now=new Date();
-  var r={ma:ma,sdt:sdt,lat:lat,lng:lng,acc:acc,d:ymd(now),h:pad(now.getHours())+':'+pad(now.getMinutes()),ts:now.toISOString(),xp:false};
+  const n=new Date(),r={ma,sdt,dc:$('dc').value.trim(),gc:$('gc').value.trim(),ph:ph.slice(),lat:Math.round(lat*1e7)/1e7,lng:Math.round(lng*1e7)/1e7,acc,
+    d:ymd(n),h:pad(n.getHours())+':'+pad(n.getMinutes()),ts:n.toISOString(),xp:false};
   if(keep){r.d=keep.d;r.h=keep.h;r.ts=keep.ts}
-  var i=-1,c=-1;for(var k=0;k<recs.length;k++){if(recs[k].ma===(editMa||ma))i=k;if(recs[k].ma===ma&&ma!==editMa)c=k}
-  if(editMa&&c>-1){say('gm','Mã '+ma+' đã có trong danh sách.','er');return}
-  if(i>-1){recs[i]=r;say('gm','Đã cập nhật '+ma+(keep?'.':' với tọa độ mới'+(acc!==''?' (±'+acc+' m).':'.')),'ok')}
-  else{recs.unshift(r);say('gm','Đã lưu '+ma+(acc!==''?' (±'+acc+' m).':'.'),'ok')}
-  sv(KEY,recs);resetForm();render();
-};
+  return r;
+}
+async function commit(r){
+  const i=recs.findIndex(x=>x.ma===(editMa||r.ma));
+  if(i>-1)recs[i]=r;else recs.unshift(r);
+  try{if(editMa&&editMa!==r.ma)await dbDel(editMa);await dbPut(r)}catch(e){warn()}
+}
+async function doSave(send){
+  const r=build();if(!r)return;
+  const upd=!!editMa;await commit(r);resetForm();render();
+  say('gm','Đã '+(upd?'cập nhật ':'lưu ')+r.ma+(r.acc!==''?' (±'+r.acc+' m).':'.'),'ok');
+  if(send)sharePdf(r);
+}
+$('bSave').onclick=()=>doSave(false);
+$('bSend').onclick=()=>doSave(true);
 
+// ---- Danh sách
 function render(){
-  var q=$('q').value.trim().toLowerCase(),d=$('day').value;
-  var vis=recs.filter(function(r){return !q||(r.ma+' '+r.sdt).toLowerCase().indexOf(q)>-1});
-  $('nAll').textContent=recs.length;
-  $('nDay').textContent=recs.filter(function(r){return r.d===d}).length;
-  var h='';
-  vis.slice(0,200).forEach(function(r){
-    var link='https://www.google.com/maps?q='+r.lat+','+r.lng;
-    h+='<div class="item"><b>'+esc(r.ma)+(r.xp?' <span class="mu">(đã xuất)</span>':'')+'</b>'
-     +'<div class="mu">'+esc(r.sdt||'Chưa có SĐT')+' · '+r.d+' '+r.h+'</div>'
+  const q=$('q').value.trim().toLowerCase(),d=$('day').value;
+  const vis=recs.filter(r=>!q||(r.ma+' '+(r.sdt||'')).toLowerCase().indexOf(q)>-1);
+  $('nAll').textContent=recs.length;$('nDay').textContent=recs.filter(r=>r.d===d).length;
+  let h='';
+  vis.slice(0,100).forEach(r=>{
+    const m=esc(r.ma);
+    h+='<div class="item">'+(r.ph&&r.ph[0]?'<img src="'+r.ph[0]+'" alt="Ảnh nhà">':'<div class="no">Chưa có ảnh</div>')
+     +'<div style="min-width:0"><b>'+m+(r.xp?' <span class="mu">(đã xuất)</span>':'')+'</b>'
+     +'<div class="mu">'+esc(r.sdt||'Chưa có SĐT')+' · '+r.d+' '+r.h+' · '+(r.ph?r.ph.length:0)+' ảnh</div>'
      +'<div class="mu">'+r.lat+', '+r.lng+(r.acc!==''?' (±'+r.acc+' m)':'')+'</div>'
-     +'<div class="row" style="margin-top:5px"><a href="'+link+'" target="_blank" rel="noopener">Mở Google Maps</a>'
-     +'<button class="s" data-e="'+esc(r.ma)+'">Sửa</button><button class="s" data-x="'+esc(r.ma)+'">Xóa</button></div></div>';
+     +'<div class="row" style="margin-top:5px"><a href="'+mapLink(r)+'" target="_blank" rel="noopener">Bản đồ</a>'
+     +'<button class="s" data-p="'+m+'">Gửi PDF</button><button class="s" data-e="'+m+'">Sửa</button><button class="s" data-x="'+m+'">Xóa</button></div></div></div>';
   });
-  if(!h)h='<div class="mu">Chưa có khách hàng nào.</div>';
-  if(vis.length>200)h+='<div class="mu">Hiển thị 200/'+vis.length+' dòng đầu, hãy tìm kiếm để thu hẹp.</div>';
+  if(!h)h='<div class="mu">Chưa có phiếu nào.</div>';
+  if(vis.length>100)h+='<div class="mu">Hiển thị 100/'+vis.length+' phiếu đầu, hãy tìm kiếm để thu hẹp.</div>';
   $('list').innerHTML=h;
 }
-$('list').addEventListener('click',function(ev){
-  var t=ev.target,e=t.getAttribute('data-e'),x=t.getAttribute('data-x');
-  var f=function(m){for(var k=0;k<recs.length;k++)if(recs[k].ma===m)return k;return -1};
-  if(e){var r=recs[f(e)];$('ma').value=r.ma;$('sdt').value=r.sdt||'';$('man').value='';editMa=r.ma;$('relo').checked=false;$('editBox').style.display='block';$('bSave').textContent='💾 Cập nhật khách hàng';window.scrollTo(0,0);say('gm','Đang sửa '+r.ma+'. Tích “Định vị lại” nếu muốn lấy tọa độ tại vị trí bạn đang đứng.')}
-  if(x&&confirm('Xóa '+x+'?')){recs.splice(f(x),1);sv(KEY,recs);render()}
+$('list').addEventListener('click',async ev=>{
+  const t=ev.target,e=t.getAttribute('data-e'),x=t.getAttribute('data-x'),p=t.getAttribute('data-p');
+  const get=m=>recs.find(r=>r.ma===m);
+  if(p)sharePdf(get(p));
+  if(e){const r=get(e);resetForm();$('ma').value=r.ma;$('sdt').value=r.sdt||'';$('dc').value=r.dc||'';$('gc').value=r.gc||'';ph=(r.ph||[]).slice();thumbs();
+    editMa=r.ma;$('editBox').style.display='block';$('bSave').textContent='💾 Cập nhật phiếu';window.scrollTo(0,0);
+    say('gm','Đang sửa '+r.ma+'. Tích “Định vị lại” nếu muốn lấy tọa độ tại vị trí bạn đang đứng.')}
+  if(x&&confirm('Xóa phiếu '+x+'?')){recs=recs.filter(r=>r.ma!==x);try{await dbDel(x)}catch(er){}render()}
 });
-$('q').addEventListener('input',render);
-$('bCancel').onclick=function(){resetForm();say('gm','')};
-$('day').addEventListener('change',render);
+$('q').addEventListener('input',render);$('day').addEventListener('change',render);
 
-function rows(list){
-  var kv=$('kv').value.trim(),nv=$('nv').value.trim();
-  return list.map(function(r,i){return{
-    'STT':i+1,'Ngày':r.d,'Giờ':r.h,'Mã KH':r.ma,'Số điện thoại':r.sdt||'',
-    'Vĩ độ':r.lat,'Kinh độ':r.lng,'Sai số (m)':r.acc,
-    'Link Google Maps':'https://www.google.com/maps?q='+r.lat+','+r.lng,
-    'Người ghi nhận':nv,'Khu vực':kv}});
-}
+// ---- PDF và chia sẻ
 function save(name,data){
-  return (window.claude&&claude.use?claude.use('downloads'):Promise.resolve(null)).then(function(dl){
-    if(dl)return dl.save({filename:name,data:data});
-    var b=new Blob([data]),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();a.remove();
+  return (window.claude&&claude.use?claude.use('downloads'):Promise.resolve(null)).then(dl=>{
+    if(dl)return dl.save({filename:name,data});
+    const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data]));a.download=name;document.body.appendChild(a);a.click();a.remove();
     return{status:'saved'};
   });
 }
-function exp(list,tag){
-  if(!list.length){say('xm','Không có dữ liệu để xuất.','er');return}
-  var kv=($('kv').value.trim()||'KhuVuc').replace(/[^\w\u00C0-\u1EF9]+/g,'_');
-  var nm='DinhViKH_'+kv+'_'+tag,data=rows(list),p;
-  if(window.XLSX){
-    var ws=XLSX.utils.json_to_sheet(data);
-    ws['!cols']=[5,11,7,18,14,12,12,10,38,18,22].map(function(w){return{wch:w}});
-    var wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'DinhViKH');
-    p=save(nm+'.xlsx',XLSX.write(wb,{type:'array',bookType:'xlsx'}));
-  }else{
-    var keys=Object.keys(data[0]);
-    var csv='\uFEFF'+keys.join(',')+'\n'+data.map(function(o){return keys.map(function(k){return '"'+String(o[k]==null?'':o[k]).replace(/"/g,'""')+'"'}).join(',')}).join('\n');
-    p=save(nm+'.csv',csv);say('xm','Không tải được thư viện Excel (cần mạng), xuất CSV thay thế.');
-  }
-  p.then(function(){list.forEach(function(r){r.xp=true});sv(KEY,recs);render();say('xm','Đã xuất '+list.length+' dòng.','ok')})
-   .catch(function(e){say('xm',(e&&e.code==='declined')?'Bạn đã hủy lưu file.':'Không xuất được file'+(e&&e.message?': '+e.message:'')+'.','er')});
+function phieu(r){
+  const row=(k,v)=>'<tr><td style="border:1px solid #888;padding:7px 10px;width:30%;background:#eef2f6;font-weight:700">'+k+'</td><td style="border:1px solid #888;padding:7px 10px;word-break:break-all">'+esc(v)+'</td></tr>';
+  return '<div style="padding:36px;font:15px/1.5 Arial,Helvetica,sans-serif">'
+   +'<div style="text-align:center"><div style="font-weight:700">'+esc($('kv').value.trim())+'</div>'
+   +'<div style="font-size:22px;font-weight:700;margin:6px 0 2px">PHIẾU THU THẬP THÔNG TIN KHÁCH HÀNG</div><div>Ngày '+r.d+' · '+r.h+'</div></div>'
+   +'<table style="width:100%;border-collapse:collapse;margin-top:16px">'+row('Mã khách hàng',r.ma)+row('Số điện thoại',r.sdt||'—')+(r.dc?row('Địa chỉ mới',r.dc):'')
+   +row('Tọa độ GPS',r.lat+', '+r.lng)+row('Sai số GPS',r.acc!==''?'±'+r.acc+' m':'—')+row('Google Maps',mapLink(r))
+   +row('Ghi chú',r.gc||'—')+row('Người ghi nhận',$('nv').value.trim()||'—')+'</table>'
+   +'<div style="margin-top:16px;font-weight:700">Ảnh nhà</div><div>'
+   +((r.ph||[]).map(p=>'<img src="'+p+'" style="width:340px;height:auto;margin:8px 10px 0 0;border:1px solid #888">').join('')||'<div>Không có ảnh</div>')
+   +'</div></div>';
 }
-$('bXls').onclick=function(){var d=$('day').value;exp(recs.filter(function(r){return r.d===d}).slice().reverse(),d)};
-$('bAll').onclick=function(){exp(recs.slice().reverse(),'TatCa_'+ymd(new Date()))};
-$('bDel').onclick=function(){
-  var n=recs.filter(function(r){return r.xp}).length;
-  if(!n){say('xm','Chưa có dòng nào đã xuất.');return}
-  if(confirm('Xóa '+n+' dòng đã xuất khỏi thiết bị này?')){recs=recs.filter(function(r){return !r.xp});sv(KEY,recs);render()}
+async function makePdf(r){
+  if(!window.html2canvas||!window.jspdf)throw new Error('Cần có mạng để tải thư viện tạo PDF.');
+  const s=$('sheet');s.innerHTML=phieu(r);
+  await Promise.all(Array.from(s.querySelectorAll('img')).map(i=>i.complete?1:new Promise(o=>{i.onload=i.onerror=o})));
+  const cv=await html2canvas(s,{scale:2,backgroundColor:'#ffffff'}),W=210,H=297,pp=Math.floor(cv.width*H/W);
+  const pdf=new window.jspdf.jsPDF('p','mm','a4');
+  for(let y=0,n=0;y<cv.height;y+=pp,n++){
+    const c=document.createElement('canvas');c.width=cv.width;c.height=Math.min(pp,cv.height-y);
+    c.getContext('2d').drawImage(cv,0,y,cv.width,c.height,0,0,cv.width,c.height);
+    if(n)pdf.addPage();pdf.addImage(c.toDataURL('image/jpeg',.9),'JPEG',0,0,W,c.height*W/cv.width);
+  }
+  s.innerHTML='';
+  return new File([pdf.output('blob')],'Phieu_'+r.ma+'_'+r.d+'.pdf',{type:'application/pdf'});
+}
+async function shareFile(f){
+  if(navigator.canShare&&navigator.canShare({files:[f]})){
+    try{await navigator.share({files:[f],title:'Phiếu '+f.name.split('_')[1],text:'Phiếu thu thập thông tin khách hàng'});
+      say('xm','Đã mở danh sách ứng dụng để gửi PDF.','ok');$('bShare').style.display='none';pend=null;return}
+    catch(e){
+      if(e.name==='AbortError'){say('xm','Đã hủy gửi.');return}
+      if(e.name==='NotAllowedError'){pend=f;$('bShare').style.display='inline-block';say('xm','PDF đã sẵn sàng, bấm nút bên dưới để chọn Zalo, Messenger…');return}
+    }
+  }
+  try{await save(f.name,await f.arrayBuffer());say('xm','Thiết bị không mở được menu chia sẻ nên PDF đã được lưu về máy. Hãy gửi file này qua Zalo hoặc Messenger.','ok')}
+  catch(e){say('xm','Không lưu được file PDF.','er')}
+}
+async function sharePdf(r){
+  say('xm','Đang tạo PDF…');
+  try{await shareFile(await makePdf(r))}catch(e){say('xm',e.message||'Không tạo được PDF.','er')}
+}
+$('bShare').onclick=()=>{if(pend)shareFile(pend)};
+
+// ---- Excel cuối ngày (kèm ảnh thu nhỏ)
+async function exp(list,tag){
+  if(!list.length){say('xm','Không có dữ liệu để xuất.','er');return}
+  const kv=$('kv').value.trim(),nv=$('nv').value.trim();
+  const nm='PhieuKH_'+(kv||'KhuVuc').replace(/[^\w\u00C0-\u1EF9]+/g,'_')+'_'+tag;
+  say('xm','Đang tạo file…');
+  try{
+    if(!window.ExcelJS){
+      const k=['Ngày','Giờ','Mã KH','SĐT','Vĩ độ','Kinh độ','Sai số (m)','Ghi chú'];
+      const csv='\uFEFF'+k.join(',')+'\n'+list.map(r=>[r.d,r.h,r.ma,r.sdt,r.lat,r.lng,r.acc,r.gc].map(v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"').join(',')).join('\n');
+      await save(nm+'.csv',csv);say('xm','Chưa tải được thư viện Excel (cần mạng), đã xuất CSV thay thế (không kèm ảnh).');
+    }else{
+      const wb=new ExcelJS.Workbook(),ws=wb.addWorksheet('Phiếu thu thập');
+      ws.columns=[['STT',5],['Ngày',11],['Giờ',7],['Mã KH',17],['Số điện thoại',14],['Địa chỉ mới',28],['Vĩ độ',13],['Kinh độ',13],['Sai số (m)',10],['Google Maps',14],['Ghi chú',24],['Người ghi nhận',16],['Khu vực',20],['Ảnh 1',16],['Ảnh 2',16],['Ảnh 3',16]].map(c=>({header:c[0],width:c[1]}));
+      const hd=ws.getRow(1);hd.font={bold:true,color:{argb:'FFFFFFFF'}};hd.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF0B6BCB'}};
+      hd.alignment={vertical:'middle',horizontal:'center',wrapText:true};hd.height=26;ws.views=[{state:'frozen',ySplit:1}];
+      for(let i=0;i<list.length;i++){
+        const r=list[i],row=ws.addRow([i+1,r.d,r.h,r.ma,r.sdt||'',r.dc||'',r.lat,r.lng,r.acc===''?null:r.acc,{text:'Mở bản đồ',hyperlink:mapLink(r)},r.gc||'',nv,kv]);
+        row.height=64;row.alignment={vertical:'middle',wrapText:true};
+        row.getCell(7).numFmt='0.0000000';row.getCell(8).numFmt='0.0000000';row.getCell(10).font={color:{argb:'FF0B6BCB'},underline:true};
+        const p=(r.ph||[]).slice(0,3);
+        for(let j=0;j<p.length;j++){
+          const t=await shrink(p[j],240,.6),id=wb.addImage({base64:t,extension:'jpeg'});
+          ws.addImage(id,{tl:{col:13+j+.05,row:i+1+.05},ext:{width:100,height:75}});
+        }
+      }
+      const s2=wb.addWorksheet('Tổng hợp'),ac=list.filter(r=>r.acc!=='').map(r=>r.acc);
+      s2.columns=[{width:34},{width:28}];
+      s2.addRows([['BÁO CÁO THU THẬP THÔNG TIN KHÁCH HÀNG'],['Ngày báo cáo',tag],['Người ghi nhận',nv],['Khu vực',kv],['Tổng số phiếu',list.length],
+        ['Số phiếu có ảnh nhà',list.filter(r=>r.ph&&r.ph.length).length],['Số phiếu có số điện thoại',list.filter(r=>r.sdt).length],
+        ['Sai số GPS trung bình (m)',ac.length?Math.round(ac.reduce((a,b)=>a+b,0)/ac.length):'—'],['Số phiếu sai số GPS trên 30 m',ac.filter(a=>a>30).length]]);
+      s2.getRow(1).font={bold:true,size:13};
+      await save(nm+'.xlsx',await wb.xlsx.writeBuffer());
+      say('xm','Đã xuất '+list.length+' phiếu.','ok');
+    }
+    for(const r of list){r.xp=true;try{await dbPut(r)}catch(e){}}render();
+  }catch(e){say('xm',(e&&e.code==='declined')?'Bạn đã hủy lưu file.':'Không xuất được file'+(e&&e.message?': '+e.message:'')+'.','er')}
+}
+$('bXls').onclick=()=>{const d=$('day').value;exp(recs.filter(r=>r.d===d).slice().reverse(),d)};
+$('bAll').onclick=()=>exp(recs.slice().reverse(),'TatCa_'+ymd(new Date()));
+$('bDel').onclick=async()=>{
+  const x=recs.filter(r=>r.xp);
+  if(!x.length){say('xm','Chưa có phiếu nào đã xuất.');return}
+  if(confirm('Xóa '+x.length+' phiếu đã xuất khỏi thiết bị này?')){recs=recs.filter(r=>!r.xp);for(const r of x){try{await dbDel(r.ma)}catch(e){}}render()}
 };
-render();
+
+// ---- Khởi động: nạp dữ liệu, chuyển dữ liệu bản cũ (nếu có)
+(async()=>{
+  try{recs=await dbAll()}catch(e){recs=[]}
+  const old=ld(OLD,[]);
+  if(old.length&&!ld('dvkh_mig',0)){
+    for(const o of old){if(!recs.some(x=>x.ma===o.ma)){o.ph=o.ph||[];o.gc=o.gc||'';recs.push(o);try{await dbPut(o)}catch(e){}}}
+    sv('dvkh_mig',1);
+  }
+  recs.sort((a,b)=>a.ts<b.ts?1:-1);render();
+})();
 })();
 </script>
 </body>
